@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="styl.css">
+</head>
+
+<body>
+    <header>
+        <h1 id="titleHeader"></h1>
+        <script>
+            var today = new Date();
+            var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            document.getElementById("titleHeader").innerText = "PARAGON " + date + "/" + "001";
+        </script>
+    </header>
+    <table id="table">
+        <tr id="tableHeader" style="color: grey;">
+            <th>LP</th>
+            <th>NAZWA</th>
+            <th>ILOŚĆ</th>
+            <th>CENA</th>
+            <th>SUMA</th>
+            <th></th>
+        </tr>
+    </table>
+    <div style="margin-left: auto; margin-right: auto; text-align: center;">
+        <h3>Nowa pozycja</h3>
+        <label for="nameInput">Nazwa</label>
+        <input type="text" placeholder="Nazwa nowego produktu.." id="nameInput">
+        <label for="amountImput"><br>Ilość</label>
+        <input type="text" placeholder="Ilość nowego produktu.." id="amountImput">
+        <label for="priceInput"><br>Cena</label>
+        <input type="text" placeholder="Cena nowego produktu.." id="priceInput">
+        <br>
+        <button type="button" style="margin:5px; padding:4px;" onclick="onClickDodaj();">Dodaj</button>
+    </div>
+</body>
+<script src="script.js"></script>
+
+</html>
