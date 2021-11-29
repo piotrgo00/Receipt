@@ -1,11 +1,19 @@
+let prodList = new Array();
+
 class Product {
     constructor(name, count, price) {
-        this.name = name
-        this.count = count
-        this.price = price
+        this.name = name;
+        if (Number(count) != NaN)
+            this.count = Math.round(Number(count));
+        else
+            this.count = 0;
+        if (Number(price) != NaN)
+            this.price = Math.round(Number(price) * 100) / 100;
+        else
+            this.price = 0;
     }
     sum() {
-        return this.count * this.price
+        return this.count * this.price;
     }
 }
 
@@ -21,7 +29,7 @@ function writeTable(productList) {
     var sum = 0;
     for (let i = 0; i < productList.length + 1; i++) {
         const tr = table.insertRow();
-        if(i != productList.length) {
+        if (i != productList.length) {
             tr.setAttribute("draggable", "true");
             tr.setAttribute("ondrop", "drop(event)");
             tr.setAttribute("ondragover", "allowDrop(event)");
@@ -36,14 +44,15 @@ function writeTable(productList) {
                 td.style.color = "rgb(80, 80, 80)";
                 td.style.fontWeight = "bold";
                 if (j == 3) {
-                    td.appendChild(document.createTextNode(`RAZEM`));
+                    td.appendChild(document.createTextNode("RAZEM"));
                 } else if (j == 4) {
-                    td.appendChild(document.createTextNode(sum + " zł"));
+                    td.appendChild(document.createTextNode(Math.round(sum * 100) / 100 + " zł"));
                 }
             }
         } else {
             for (let j = 0; j < 6; j++) {
                 const td = tr.insertCell();
+                td.addEventListener("onclick", editField);
                 if (j == 0)
                     td.appendChild(document.createTextNode(i));
                 if (j == 1)
@@ -53,13 +62,13 @@ function writeTable(productList) {
                 if (j == 3)
                     td.appendChild(document.createTextNode(productList[i].price + " zł"));
                 if (j == 4) {
-                    td.appendChild(document.createTextNode(productList[i].sum() + " zł"));
-                    sum += productList[i].sum();
+                    td.appendChild(document.createTextNode(Math.round(productList[i].count * productList[i].price * 100) / 100 + " zł"));
+                    sum += Math.round(productList[i].count * productList[i].price * 100) / 100;
                 }
                 if (j == 5) {
                     var el = document.createElement("button");
                     el.id = i;
-                    el.innerText = "Delete";
+                    el.innerText = "Usuń produkt";
                     el.addEventListener("click", deleteEl);
                     td.appendChild(el);
                 }
@@ -72,6 +81,15 @@ function deleteEl(object) {
     //console.log(object.currentTarget.id);
     prodList.splice(object.currentTarget.id, 1);
     writeTable(prodList);
+    localStorage.pList = JSON.stringify(prodList);
+}
+
+function editField(object) {
+    console.log(object.currentTarget);
+    object.currentTarget.removeChild(object.currentTarget.firstChild);
+    var input = document.createElement("input");
+    input.setAttribute("type", "text");
+    object.currentTarget.appendChild(input);
 }
 
 function onClickDodaj() {
@@ -80,13 +98,14 @@ function onClickDodaj() {
     _price = document.getElementById('priceInput').value;
     if (_name == "")
         _name = "Produkt bez nazwy";
-    if (_amount == "")
+    if (isNaN(Number(_amount)))
         _amount = 0;
-    if (_price == "")
+    if (isNaN(Number(_price)))
         _price = 0;
     var prod = new Product(_name, _amount, _price);
     prodList.push(prod);
     writeTable(prodList);
+    localStorage.pList = JSON.stringify(prodList);
 }
 
 function allowDrop(ev) {
@@ -108,9 +127,10 @@ function drop(ev) {
     //console.log(p1 + " " + p2);
     [prodList[p2], prodList[p1]] = [prodList[p1], prodList[p2]];
     writeTable(prodList);
+    localStorage.pList = JSON.stringify(prodList);
 }
 
-const tr = table.insertRow();
+/*const tr = table.insertRow();
 for (let j = 0; j < 5; j++) {
     const td = tr.insertCell();
     td.style.borderBottom = "0px";
@@ -122,6 +142,30 @@ for (let j = 0; j < 5; j++) {
     } else if (j == 4) {
         td.appendChild(document.createTextNode(`0 zł`));
     }
+}*/
+
+document.body.onload = function () {
+    if (localStorage.pList)
+        prodList = JSON.parse(localStorage.pList);
+    writeTable(prodList);
+    console.log(prodList);
+}
+
+function validate(evt) {
+    var theEvent = evt || window.event;
+
+    if (theEvent.type === 'paste') {
+        key = event.clipboardData.getData('text/plain');
+    } else {
+        var key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode(key);
+    }
+    var regex = /[0-9]|\./;
+    if (!regex.test(key)) {
+        theEvent.returnValue = false;
+        if (theEvent.preventDefault)
+            theEvent.preventDefault();
+    }
 }
 
 var prod1 = new Product("Jabłko", 4, 5);
@@ -129,6 +173,5 @@ var prod2 = new Product("Mandarynka", 3, 5);
 var prod3 = new Product("Gruszka", 1, 52);
 var prod4 = new Product("Ak-47", 2, 4);
 
-let prodList = new Array();
 
 prodList = [prod1, prod2, prod3, prod4];

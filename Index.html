@@ -28,9 +28,9 @@
         <label for="nameInput">Nazwa</label>
         <input type="text" placeholder="Nazwa nowego produktu.." id="nameInput">
         <label for="amountImput"><br>Ilość</label>
-        <input type="text" placeholder="Ilość nowego produktu.." id="amountImput">
+        <input type="text" placeholder="Ilość nowego produktu.." id="amountImput" onkeypress='validate(event)'>
         <label for="priceInput"><br>Cena</label>
-        <input type="text" placeholder="Cena nowego produktu.." id="priceInput">
+        <input type="text" placeholder="Cena nowego produktu.." id="priceInput" onkeypress='validate(event)'>
         <br>
         <button type="button" style="margin:5px; padding:4px;" onclick="onClickDodaj();">Dodaj</button>
     </div>
