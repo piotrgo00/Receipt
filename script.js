@@ -127,14 +127,15 @@ function saveBtnClick(object) {
     //console.log(parent.id)
     switch (parent.id) {
         case "nameTd":
-            prodList[Number(parent.parentElement.id)].name = inputText;
+            if (inputText != "")
+                prodList[Number(parent.parentElement.id)].name = inputText;
             break;
         case "countTd":
-            if (!isNaN(Number(inputText)))
+            if (!isNaN(Number(inputText)) && inputText != "")
                 prodList[Number(parent.parentElement.id)].count = Math.round(Number(inputText));
             break;
         case "priceTd":
-            if (!isNaN(Number(inputText)))
+            if (!isNaN(Number(inputText)) && inputText != "")
                 prodList[Number(parent.parentElement.id)].price = Math.round(Number(inputText) * 100) / 100;
             break;
     }
@@ -181,6 +182,7 @@ function drop(ev) {
     [prodList[p2], prodList[p1]] = [prodList[p1], prodList[p2]];
     writeTable(prodList);
     localStorage.pList = JSON.stringify(prodList);
+    isBeingEdited = false;
 }
 
 /*const tr = table.insertRow();
