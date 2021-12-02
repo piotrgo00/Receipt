@@ -146,6 +146,7 @@ function saveBtnClick(object) {
     //console.log(inputText);
 
 }
+
 function onClickDodaj() {
     _name = document.getElementById('nameInput').value;
     _amount = document.getElementById('amountImput').value;
